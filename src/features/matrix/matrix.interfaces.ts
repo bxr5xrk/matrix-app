@@ -26,6 +26,8 @@ interface MatrixContextValue {
   highlightedCellIds: Set<number>;
   addHighlight: (i: number, j: number) => void;
   removeHighlight: () => void;
+  addRow: () => void;
+  removeRow: (i: number) => void;
 }
 
 // interface TableContextValue {

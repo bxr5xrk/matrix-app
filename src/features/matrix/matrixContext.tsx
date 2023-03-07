@@ -10,7 +10,9 @@ export const MatrixContext = createContext<MatrixContextValue>({
   setX: () => {},
   highlightedCellIds: new Set(),
   addHighlight: () => {},
-  removeHighlight: () => {}
+  removeHighlight: () => {},
+  addRow: () => {},
+  removeRow: () => {}
 });
 
 interface MatrixProviderProps {
@@ -57,6 +59,30 @@ export function MatrixProvider({ children }: MatrixProviderProps) {
 
   const removeHighlight = () => setHighlightedCellIds(new Set());
 
+  const addRow = () =>
+    setMatrix((prev) => {
+      const lastRow = matrix[matrix.length - 1];
+      const lastCellId = lastRow[lastRow.length - 1].id;
+
+      const newRow: Cell[] = [];
+      for (let i = 0; i < matrix[0].length; i++) {
+        newRow.push({
+          id: lastCellId + i + 1,
+          amount: Math.floor(Math.random() * 900) + 100
+        });
+      }
+
+      return [...prev, newRow];
+    });
+
+  const removeRow = (rowIndex: number) =>
+    setMatrix((prev) => {
+      const newMatrix = [...prev];
+      newMatrix.splice(rowIndex, 1);
+
+      return newMatrix;
+    });
+
   return (
     <MatrixContext.Provider
       value={{
@@ -67,7 +93,9 @@ export function MatrixProvider({ children }: MatrixProviderProps) {
         setX,
         highlightedCellIds,
         addHighlight,
-        removeHighlight
+        removeHighlight,
+        addRow,
+        removeRow
       }}
     >
       {children}

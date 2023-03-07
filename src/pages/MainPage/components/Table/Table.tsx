@@ -64,7 +64,7 @@ const getRowSum = (row: Cell[]) => {
 };
 
 function RowField({ row, rowIndex }: RowFieldProps) {
-  const { removeHighlight } = useMatrix();
+  const { removeHighlight, removeRow } = useMatrix();
 
   const [showPercentage, setShowPercentage] = useState(false);
   const sum = getRowSum(row);
@@ -90,12 +90,15 @@ function RowField({ row, rowIndex }: RowFieldProps) {
       >
         {sum}
       </td>
+      <td>
+        <button onClick={() => removeRow(rowIndex)}>remove</button>
+      </td>
     </tr>
   );
 }
 
 function Table() {
-  const { matrix, removeHighlight } = useMatrix();
+  const { matrix, removeHighlight, addRow } = useMatrix();
 
   if (matrix.length === 0) {
     return null;
@@ -111,30 +114,34 @@ function Table() {
   const handleHoverEnd = () => removeHighlight();
 
   return (
-    <table>
-      <thead>
-        <tr>
-          {Array.from({ length: matrix[0].length }, (_, i) => (
-            <th key={i}>Column {i + 1}</th>
+    <>
+      <table>
+        <thead>
+          <tr>
+            {Array.from({ length: matrix[0].length }, (_, i) => (
+              <th key={i}>Column {i + 1}</th>
+            ))}
+            <th>Row Sum</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody onMouseLeave={handleHoverEnd}>
+          {matrix.map((row, index) => (
+            <RowField key={index} row={row} rowIndex={index} />
           ))}
-          <th>Row Sum</th>
-        </tr>
-      </thead>
-      <tbody onMouseLeave={handleHoverEnd}>
-        {matrix.map((row, index) => (
-          <RowField key={index} row={row} rowIndex={index} />
-        ))}
-        <tr>
-          {Array.from({ length: Number(matrix[0].length) + 1 }, (_, i) => {
-            if (i === matrix[0].length) {
-              return <td key={i}>Column Average</td>;
-            }
-            const average = getColumnAverage(matrix, i);
-            return <td key={i}>{isNaN(average) ? '' : average}</td>;
-          })}
-        </tr>
-      </tbody>
-    </table>
+          <tr>
+            {Array.from({ length: Number(matrix[0].length) + 1 }, (_, i) => {
+              if (i === matrix[0].length) {
+                return <td key={i}>Column Average</td>;
+              }
+              const average = getColumnAverage(matrix, i);
+              return <td key={i}>{average ? average.toFixed(1) : ''}</td>;
+            })}
+          </tr>
+        </tbody>
+      </table>
+      <button onClick={addRow}>add new</button>
+    </>
   );
 }
 
