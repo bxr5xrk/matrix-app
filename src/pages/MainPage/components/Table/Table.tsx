@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import type { Cell } from '../../../../features/matrix/matrix.interfaces';
 import { useMatrix } from '../../../../features/matrix/matrixContext';
 
@@ -6,9 +6,15 @@ interface CellFieldProps {
   cell: Cell;
   rowIndex: number;
   cellIndex: number;
+  showPercentage: boolean;
 }
 
-function CellField({ cell, rowIndex, cellIndex }: CellFieldProps) {
+function CellField({
+  cell,
+  rowIndex,
+  cellIndex,
+  showPercentage
+}: CellFieldProps) {
   const { amount, id } = cell;
   const { incrementCellAmount, addHighlight, highlightedCellIds } = useMatrix();
 
@@ -30,7 +36,7 @@ function CellField({ cell, rowIndex, cellIndex }: CellFieldProps) {
       onMouseEnter={onHoverStart}
       onClick={handleCellClick}
     >
-      {amount}
+      {`${amount}${showPercentage ? '%' : ''}`}
     </td>
   );
 }
@@ -44,18 +50,35 @@ const getRowSum = (row: Cell[]) => {
   return row.reduce((sum, cell) => sum + cell.amount, 0);
 };
 
+const getCollPercentageAmount = (cells: Cell[], sum: number) =>
+  cells.map((num) => ({
+    ...num,
+    amount: Math.floor((num.amount / sum) * 100)
+  }));
+
 function RowField({ row, rowIndex }: RowFieldProps) {
+  const [showPercentage, setShowPercentage] = useState(false);
+  const sum = getRowSum(row);
+
+  const _row = showPercentage ? getCollPercentageAmount(row, sum) : row;
+
   return (
     <tr>
-      {row.map((cell, index) => (
+      {_row.map((cell, index) => (
         <CellField
           key={cell.id}
           cell={cell}
           rowIndex={rowIndex}
           cellIndex={index}
+          showPercentage={showPercentage}
         />
       ))}
-      <td>{getRowSum(row)}</td>
+      <td
+        onMouseEnter={() => setShowPercentage(true)}
+        onMouseLeave={() => setShowPercentage(false)}
+      >
+        {sum}
+      </td>
     </tr>
   );
 }
