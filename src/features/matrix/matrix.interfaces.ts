@@ -19,8 +19,10 @@ interface TableState {
 
 interface MatrixContextValue {
   matrix: Cell[][];
+  x: number;
   updateCell: (id: number) => void;
   setMatrix: (i: Cell[][]) => void;
+  setX: (i: number) => void;
 }
 
 // interface TableContextValue {

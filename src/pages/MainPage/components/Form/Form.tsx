@@ -33,19 +33,26 @@ const createMatrix = ({ m, n }: createMatrixProps) => {
 };
 
 function Form() {
-  const { setMatrix } = useMatrix();
+  const { setMatrix, setX } = useMatrix();
   const NRef = useRef<HTMLInputElement>(null);
   const MRef = useRef<HTMLInputElement>(null);
+  const XRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (NRef.current !== null && MRef.current !== null) {
+    if (
+      NRef.current !== null &&
+      MRef.current !== null &&
+      XRef.current !== null
+    ) {
       const NValue = Number(NRef.current.value);
       const MValue = Number(MRef.current.value);
+      const XValue = Number(MRef.current.value);
 
       const dimensions = { m: MValue, n: NValue };
 
+      setX(XValue);
       setMatrix(createMatrix(dimensions));
     }
   };
@@ -65,6 +72,14 @@ function Form() {
         id="M"
         type="number"
         placeholder="enter M"
+        min={0}
+        max={100}
+      />
+      <input
+        ref={XRef}
+        id="X"
+        type="number"
+        placeholder="enter X"
         min={0}
         max={100}
       />

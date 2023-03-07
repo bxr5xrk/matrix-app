@@ -1,27 +1,13 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Cell, MatrixContextValue } from './matrix.interfaces';
-// import type { ReactNode } from 'react';
-// import type { TableContextValue, TableState } from './matrix.interfaces';
-
-// export const MatrixContext = createContext<TableContextValue>({
-//   state: { rows: [], averages: [], highlightedCells: new Set() },
-//   updateCell: () => {},
-//   removeRow: () => {},
-//   addRow: () => {}
-// });
-
-// interface TableProviderProps {
-//   rows: number;
-//   columns: number;
-//   initialData?: number[][];
-//   children: ReactNode;
-// }
 
 export const MatrixContext = createContext<MatrixContextValue>({
   matrix: [],
+  x: 0,
   updateCell: () => {},
-  setMatrix: () => {}
+  setMatrix: () => {},
+  setX: () => {}
 });
 
 interface MatrixProviderProps {
@@ -32,6 +18,7 @@ export const useMatrix = () => useContext(MatrixContext);
 
 export function MatrixProvider({ children }: MatrixProviderProps) {
   const [matrix, setMatrix] = useState<Cell[][]>([]);
+  const [x, setX] = useState(0);
 
   const updateCell = (id: number) => {
     const updatedMatrix = matrix.map((row) => {
@@ -50,7 +37,7 @@ export function MatrixProvider({ children }: MatrixProviderProps) {
   };
 
   return (
-    <MatrixContext.Provider value={{ matrix, updateCell, setMatrix }}>
+    <MatrixContext.Provider value={{ matrix, updateCell, setMatrix, x, setX }}>
       {children}
     </MatrixContext.Provider>
   );

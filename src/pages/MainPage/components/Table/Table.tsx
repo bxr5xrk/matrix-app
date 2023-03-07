@@ -1,12 +1,13 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import type { Cell } from '../../../../features/matrix/matrix.interfaces';
 import { useMatrix } from '../../../../features/matrix/matrixContext';
 
 interface CellFieldProps {
   cell: Cell;
+  setHoveredCellId: (i: number | null) => void;
 }
 
-function CellField({ cell }: CellFieldProps) {
+function CellField({ cell, setHoveredCellId }: CellFieldProps) {
   const { id, amount } = cell;
   const { updateCell } = useMatrix();
 
@@ -14,19 +15,55 @@ function CellField({ cell }: CellFieldProps) {
     updateCell(id);
   };
 
-  return <td onClick={handleCellClick}>{amount}</td>;
+  const onHoverStart = () => {
+    setHoveredCellId(id);
+  };
+  const onHoverEnd = () => {
+    setHoveredCellId(null);
+  };
+
+  return (
+    <td
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+      onClick={handleCellClick}
+    >
+      {amount}
+    </td>
+  );
+}
+
+interface RowFieldProps {
+  row: Cell[];
+  setHoveredCellId: (i: number | null) => void;
+}
+
+const getRowSum = (row: Cell[]) => {
+  return row.reduce((sum, cell) => sum + cell.amount, 0);
+};
+
+function RowField({ row, setHoveredCellId }: RowFieldProps) {
+  return (
+    <tr>
+      {row.map((cell) => (
+        <CellField
+          setHoveredCellId={setHoveredCellId}
+          key={cell.id}
+          cell={cell}
+        />
+      ))}
+      <td>{getRowSum(row)}</td>
+    </tr>
+  );
 }
 
 function Table() {
   const { matrix } = useMatrix();
+  const [hoveredCellId, setHoveredCellId] = useState<number | null>(null);
 
   if (matrix.length === 0) {
     return null;
   }
-
-  const getRowSum = (row: Cell[]) => {
-    return row.reduce((sum, cell) => sum + cell.amount, 0);
-  };
 
   const getColumnAverage = (matrix: Cell[][], column: number) => {
     const columnCells = matrix.map((row) => row[column]);
@@ -34,6 +71,8 @@ function Table() {
     const average = sum / matrix.length;
     return isNaN(average) ? 0 : average;
   };
+
+  console.log(hoveredCellId);
 
   return (
     <table>
@@ -47,13 +86,7 @@ function Table() {
       </thead>
       <tbody>
         {matrix.map((row, i) => (
-          <tr key={i}>
-            {row.map((cell) => (
-              <CellField key={cell.id} cell={cell} />
-              // <td key={cell.id}>{cell.amount}</td>
-            ))}
-            <td>{getRowSum(row)}</td>
-          </tr>
+          <RowField setHoveredCellId={setHoveredCellId} key={i} row={row} />
         ))}
         <tr>
           {Array.from({ length: Number(matrix[0].length) + 1 }, (_, i) => {
