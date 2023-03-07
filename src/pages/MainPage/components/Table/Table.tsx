@@ -5,21 +5,22 @@ import { useMatrix } from '../../../../features/matrix/matrixContext';
 import RowField from './components/RowField/RowField';
 import cl from './Table.module.scss';
 
+const getColumnAverage = (matrix: Cell[][], column: number) => {
+  const columnCells = matrix.map((row) => row[column]);
+  const sum = columnCells.reduce((sum, cell) => sum + cell.amount, 0);
+  const average = sum / matrix.length;
+  return isNaN(average) ? 0 : average;
+};
+
 function Table() {
-  const { matrix, removeHighlight, addRow } = useMatrix();
+  const { matrix, removeHighlight, highlightedCellIds, addRow } = useMatrix();
 
   if (matrix.length === 0) {
     return null;
   }
 
-  const getColumnAverage = (matrix: Cell[][], column: number) => {
-    const columnCells = matrix.map((row) => row[column]);
-    const sum = columnCells.reduce((sum, cell) => sum + cell.amount, 0);
-    const average = sum / matrix.length;
-    return isNaN(average) ? 0 : average;
-  };
-
-  const handleHoverEnd = () => removeHighlight();
+  const handleHoverEnd = () =>
+    highlightedCellIds.size ? removeHighlight() : undefined;
 
   return (
     <div className={cl.root}>

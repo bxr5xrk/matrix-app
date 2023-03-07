@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import type { Cell } from '../../../../../../features/matrix/matrix.interfaces';
 import { useMatrix } from '../../../../../../features/matrix/matrixContext';
 import CellField from '../CellField/CellField';
@@ -14,9 +14,9 @@ const getRowSum = (row: Cell[]) =>
 
 function RowField({ row, rowIndex }: RowFieldProps) {
   const { removeHighlight, removeRow } = useMatrix();
-
   const [showPercentage, setShowPercentage] = useState(false);
-  const sum = getRowSum(row);
+
+  const sum = useMemo(() => getRowSum(row), [row]);
 
   return (
     <tr>

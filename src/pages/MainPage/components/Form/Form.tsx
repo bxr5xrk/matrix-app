@@ -32,26 +32,29 @@ function Form() {
       <h2>Create Matrix</h2>
       <div className={cl.inputs}>
         <Input
+          required
           ref={NRef}
           id="N"
           type="number"
           placeholder="enter N"
-          min={0}
+          min={1}
           max={100}
           label="N"
         />
 
         <Input
+          required
           label="M"
           ref={MRef}
           id="M"
           type="number"
           placeholder="enter M"
-          min={0}
+          min={1}
           max={100}
         />
 
         <Input
+          required
           label="X"
           ref={XRef}
           id="X"
