@@ -10,7 +10,7 @@ interface ButtonProps
   title: string;
 }
 
-function Button({ title, ...props }: ButtonProps) {
+function Button({ title, children, ...props }: ButtonProps) {
   return (
     <button className={cl.root} {...props}>
       {title}

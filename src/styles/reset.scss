@@ -122,11 +122,16 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-input[type='number'] {
-  -moz-appearance: textfield;
+input {
+  all: unset;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+/* Firefox */
+input[type='number'] {
+  appearance: textfield;
 }

@@ -1,101 +1,9 @@
-import { memo, useState } from 'react';
+import { memo } from 'react';
+import Button from '../../../../components/Button/Button';
 import type { Cell } from '../../../../features/matrix/matrix.interfaces';
 import { useMatrix } from '../../../../features/matrix/matrixContext';
-
-interface CellFieldProps {
-  cell: Cell;
-  rowIndex: number;
-  cellIndex: number;
-  showPercentage: boolean;
-  sum: number;
-}
-
-function CellField({
-  cell,
-  rowIndex,
-  cellIndex,
-  showPercentage,
-  sum
-}: CellFieldProps) {
-  const { amount, id } = cell;
-  const { incrementCellAmount, addHighlight, highlightedCellIds } = useMatrix();
-
-  const handleCellClick = () => {
-    incrementCellAmount(rowIndex, cellIndex);
-  };
-
-  const onHoverStart = () => {
-    addHighlight(rowIndex, cellIndex);
-  };
-
-  const isActive = highlightedCellIds.has(id);
-
-  const percentage = showPercentage ? Math.floor((amount / sum) * 100) : 0;
-
-  const value = showPercentage
-    ? `${percentage}${showPercentage ? '%' : ''}`
-    : amount;
-
-  return (
-    <td
-      style={{
-        transition: 'background-color 0.3s ease',
-        background: showPercentage
-          ? `linear-gradient(to right, var(--primary) 0, rgba(0,0,0,0) ${percentage}%)`
-          : isActive
-          ? 'red'
-          : undefined
-      }}
-      onMouseEnter={onHoverStart}
-      onClick={handleCellClick}
-    >
-      {value}
-    </td>
-  );
-}
-
-interface RowFieldProps {
-  row: Cell[];
-  rowIndex: number;
-}
-
-const getRowSum = (row: Cell[]) => {
-  return row.reduce((sum, cell) => sum + cell.amount, 0);
-};
-
-function RowField({ row, rowIndex }: RowFieldProps) {
-  const { removeHighlight, removeRow } = useMatrix();
-
-  const [showPercentage, setShowPercentage] = useState(false);
-  const sum = getRowSum(row);
-
-  return (
-    <tr>
-      {row.map((cell, index) => (
-        <CellField
-          key={cell.id}
-          cell={cell}
-          rowIndex={rowIndex}
-          cellIndex={index}
-          sum={sum}
-          showPercentage={showPercentage}
-        />
-      ))}
-      <td
-        onMouseEnter={() => setShowPercentage(true)}
-        onMouseLeave={() => {
-          setShowPercentage(false);
-          removeHighlight();
-        }}
-      >
-        {sum}
-      </td>
-      <td>
-        <button onClick={() => removeRow(rowIndex)}>remove</button>
-      </td>
-    </tr>
-  );
-}
+import RowField from './components/RowField/RowField';
+import cl from './Table.module.scss';
 
 function Table() {
   const { matrix, removeHighlight, addRow } = useMatrix();
@@ -114,15 +22,16 @@ function Table() {
   const handleHoverEnd = () => removeHighlight();
 
   return (
-    <>
+    <div className={cl.root}>
       <table>
         <thead>
           <tr>
+            <th />
             {Array.from({ length: matrix[0].length }, (_, i) => (
               <th key={i}>Column {i + 1}</th>
             ))}
-            <th>Row Sum</th>
-            <th />
+            <th>Sum values</th>
+            <th>Remove</th>
           </tr>
         </thead>
         <tbody onMouseLeave={handleHoverEnd}>
@@ -130,9 +39,10 @@ function Table() {
             <RowField key={index} row={row} rowIndex={index} />
           ))}
           <tr>
+            <td>Average values</td>
             {Array.from({ length: Number(matrix[0].length) + 1 }, (_, i) => {
               if (i === matrix[0].length) {
-                return <td key={i}>Column Average</td>;
+                return null;
               }
               const average = getColumnAverage(matrix, i);
               return <td key={i}>{average ? average.toFixed(1) : ''}</td>;
@@ -140,8 +50,8 @@ function Table() {
           </tr>
         </tbody>
       </table>
-      <button onClick={addRow}>add new</button>
-    </>
+      <Button onClick={addRow} title="Add new row" />
+    </div>
   );
 }
 
