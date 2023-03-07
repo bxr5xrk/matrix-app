@@ -18,6 +18,7 @@ module.exports = {
   plugins: ['react', 'jsx-a11y'],
   ignorePatterns: ['vite.config.ts'],
   rules: {
+    '@typescript-eslint/strict-boolean-expressions': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-noninteractive-element-interactions': 'off',
     '@typescript-eslint/no-confusing-void-expression': 'off',

@@ -11,18 +11,21 @@ interface Row {
   sum: number;
 }
 
-interface TableState {
-  rows: Row[];
-  averages: number[];
-  highlightedCells: Set<number>;
-}
+// interface TableState {
+//   rows: Row[];
+//   averages: number[];
+//   highlightedCells: Set<number>;
+// }
 
 interface MatrixContextValue {
   matrix: Cell[][];
   x: number;
-  updateCell: (id: number) => void;
+  incrementCellAmount: (i: number, j: number) => void;
   setMatrix: (i: Cell[][]) => void;
   setX: (i: number) => void;
+  highlightedCellIds: Set<number>;
+  addHighlight: (i: number, j: number) => void;
+  removeHighlight: () => void;
 }
 
 // interface TableContextValue {
@@ -35,7 +38,7 @@ interface MatrixContextValue {
 export type {
   Cell,
   Row,
-  TableState,
+  // TableState,
   MatrixContextValue
   //  TableContextValue
 };

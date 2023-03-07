@@ -81,7 +81,7 @@ function Form() {
         type="number"
         placeholder="enter X"
         min={0}
-        max={100}
+        max={1000}
       />
       <button type="submit">submit</button>
     </form>
