@@ -7,13 +7,15 @@ interface CellFieldProps {
   rowIndex: number;
   cellIndex: number;
   showPercentage: boolean;
+  sum: number;
 }
 
 function CellField({
   cell,
   rowIndex,
   cellIndex,
-  showPercentage
+  showPercentage,
+  sum
 }: CellFieldProps) {
   const { amount, id } = cell;
   const { incrementCellAmount, addHighlight, highlightedCellIds } = useMatrix();
@@ -28,15 +30,26 @@ function CellField({
 
   const isActive = highlightedCellIds.has(id);
 
+  const percentage = showPercentage ? Math.floor((amount / sum) * 100) : 0;
+
+  const value = showPercentage
+    ? `${percentage}${showPercentage ? '%' : ''}`
+    : amount;
+
   return (
     <td
       style={{
-        backgroundColor: isActive ? 'red' : undefined
+        transition: 'background-color 0.3s ease',
+        background: showPercentage
+          ? `linear-gradient(to right, var(--primary) 0, rgba(0,0,0,0) ${percentage}%)`
+          : isActive
+          ? 'red'
+          : undefined
       }}
       onMouseEnter={onHoverStart}
       onClick={handleCellClick}
     >
-      {`${amount}${showPercentage ? '%' : ''}`}
+      {value}
     </td>
   );
 }
@@ -50,32 +63,30 @@ const getRowSum = (row: Cell[]) => {
   return row.reduce((sum, cell) => sum + cell.amount, 0);
 };
 
-const getCollPercentageAmount = (cells: Cell[], sum: number) =>
-  cells.map((num) => ({
-    ...num,
-    amount: Math.floor((num.amount / sum) * 100)
-  }));
-
 function RowField({ row, rowIndex }: RowFieldProps) {
+  const { removeHighlight } = useMatrix();
+
   const [showPercentage, setShowPercentage] = useState(false);
   const sum = getRowSum(row);
 
-  const _row = showPercentage ? getCollPercentageAmount(row, sum) : row;
-
   return (
     <tr>
-      {_row.map((cell, index) => (
+      {row.map((cell, index) => (
         <CellField
           key={cell.id}
           cell={cell}
           rowIndex={rowIndex}
           cellIndex={index}
+          sum={sum}
           showPercentage={showPercentage}
         />
       ))}
       <td
         onMouseEnter={() => setShowPercentage(true)}
-        onMouseLeave={() => setShowPercentage(false)}
+        onMouseLeave={() => {
+          setShowPercentage(false);
+          removeHighlight();
+        }}
       >
         {sum}
       </td>
