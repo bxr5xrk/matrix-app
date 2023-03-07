@@ -11,12 +11,6 @@ interface Row {
   sum: number;
 }
 
-// interface TableState {
-//   rows: Row[];
-//   averages: number[];
-//   highlightedCells: Set<number>;
-// }
-
 interface MatrixContextValue {
   matrix: Cell[][];
   x: number;
@@ -30,17 +24,4 @@ interface MatrixContextValue {
   removeRow: (i: number) => void;
 }
 
-// interface TableContextValue {
-//   state: TableState;
-//   updateCell: (rowIndex: number, cellIndex: number, newValue: number) => void;
-//   removeRow: (rowIndex: number) => void;
-//   addRow: () => void;
-// }
-
-export type {
-  Cell,
-  Row,
-  // TableState,
-  MatrixContextValue
-  //  TableContextValue
-};
+export type { Cell, Row, MatrixContextValue };

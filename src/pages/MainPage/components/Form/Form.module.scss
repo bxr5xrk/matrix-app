@@ -1,0 +1,22 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 3rem;
+  border: 1px solid var(--additional);
+  border-radius: 0.5rem;
+  width: fit-content;
+
+  h2 {
+    font-weight: 500;
+    font-size: 1.5rem;
+  }
+
+  .inputs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+}

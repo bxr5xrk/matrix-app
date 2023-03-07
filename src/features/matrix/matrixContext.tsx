@@ -23,10 +23,10 @@ export const useMatrix = () => useContext(MatrixContext);
 
 export function MatrixProvider({ children }: MatrixProviderProps) {
   const [matrix, setMatrix] = useState<Cell[][]>([]);
+  const [x, setX] = useState(0);
   const [highlightedCellIds, setHighlightedCellIds] = useState<Set<CellId>>(
     new Set()
   );
-  const [x, setX] = useState(0);
 
   const incrementCellAmount = (i: number, j: number) => {
     setMatrix((prevMatrix) => {
