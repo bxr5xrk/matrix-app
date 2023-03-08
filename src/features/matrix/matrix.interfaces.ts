@@ -15,8 +15,7 @@ interface MatrixContextValue {
   matrix: Cell[][];
   x: number;
   incrementCellAmount: (i: number, j: number) => void;
-  setMatrix: (i: Cell[][]) => void;
-  setX: (i: number) => void;
+  setInitialData: ({ x, matrix }: { x: number; matrix: Cell[][] }) => void;
   highlightedCellIds: Set<number>;
   addHighlight: (i: number, j: number) => void;
   removeHighlight: () => void;

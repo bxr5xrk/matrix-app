@@ -6,8 +6,7 @@ export const MatrixContext = createContext<MatrixContextValue>({
   matrix: [],
   x: 0,
   incrementCellAmount: () => {},
-  setMatrix: () => {},
-  setX: () => {},
+  setInitialData: () => {},
   highlightedCellIds: new Set(),
   addHighlight: () => {},
   removeHighlight: () => {},
@@ -98,14 +97,21 @@ export function MatrixProvider({ children }: MatrixProviderProps) {
     []
   );
 
+  const setInitialData = useCallback(
+    ({ x, matrix }: { x: number; matrix: Cell[][] }) => {
+      setX(x);
+      setMatrix(matrix);
+    },
+    []
+  );
+
   return (
     <MatrixContext.Provider
       value={{
         matrix,
         incrementCellAmount,
-        setMatrix,
+        setInitialData,
         x,
-        setX,
         highlightedCellIds,
         addHighlight,
         removeHighlight,

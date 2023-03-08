@@ -44,7 +44,6 @@ function CellField({
   return (
     <td
       style={{
-        transition: 'background-color 0.3s ease',
         background: showPercentage
           ? `linear-gradient(to right, var(--primary) 0, rgba(0,0,0,0) ${percentage}%)`
           : isActive

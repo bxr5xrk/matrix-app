@@ -6,11 +6,10 @@ import { generateMatrix } from '../../../../utils/matrixUtils';
 import cl from './Form.module.scss';
 
 function Form() {
-  const { setMatrix, setX } = useMatrix();
+  const { setInitialData } = useMatrix();
   const NRef = useRef<HTMLInputElement>(null);
   const MRef = useRef<HTMLInputElement>(null);
   const XRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,13 +21,12 @@ function Form() {
 
       const dimensions = { m: MValue, n: NValue };
 
-      setX(XValue);
-      setMatrix(generateMatrix(dimensions));
+      setInitialData({ x: XValue, matrix: generateMatrix(dimensions) });
     }
   };
 
   return (
-    <form ref={formRef} className={cl.root} onSubmit={handleSubmit}>
+    <form className={cl.root} onSubmit={handleSubmit}>
       <h2>Create Matrix</h2>
       <div className={cl.inputs}>
         <Input
