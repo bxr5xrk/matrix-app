@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import type { Cell } from '../../../../../../features/matrix/matrix.interfaces';
 import { useMatrix } from '../../../../../../features/matrix/matrixContext';
 
@@ -18,15 +18,12 @@ function CellField({
   sum
 }: CellFieldProps) {
   const { amount, id } = cell;
-  const { incrementCellAmount, addHighlight, highlightedCellIds } = useMatrix();
-
-  const handleCellClick = useCallback(() => {
-    incrementCellAmount(rowIndex, cellIndex);
-  }, []);
-
-  const onHoverStart = useCallback(() => {
-    addHighlight(rowIndex, cellIndex);
-  }, []);
+  const {
+    incrementCellAmount,
+    addHighlight,
+    removeHighlight,
+    highlightedCellIds
+  } = useMatrix();
 
   const isActive = useMemo(
     () => highlightedCellIds.has(id),
@@ -54,8 +51,9 @@ function CellField({
           ? 'var(--primary)'
           : undefined
       }}
-      onMouseEnter={onHoverStart}
-      onClick={handleCellClick}
+      onMouseEnter={() => addHighlight(rowIndex, cellIndex)}
+      onMouseLeave={removeHighlight}
+      onClick={() => incrementCellAmount(rowIndex, cellIndex)}
     >
       {value}
     </td>

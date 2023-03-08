@@ -18,7 +18,7 @@ function Form() {
     if (NRef.current && MRef.current && XRef.current) {
       const NValue = Number(NRef.current.value);
       const MValue = Number(MRef.current.value);
-      const XValue = Number(MRef.current.value);
+      const XValue = Number(XRef.current.value);
 
       const dimensions = { m: MValue, n: NValue };
 

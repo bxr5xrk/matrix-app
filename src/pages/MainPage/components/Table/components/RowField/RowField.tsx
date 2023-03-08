@@ -2,6 +2,7 @@
 import { memo, useMemo, useState } from 'react';
 import type { Cell } from '../../../../../../features/matrix/matrix.interfaces';
 import { useMatrix } from '../../../../../../features/matrix/matrixContext';
+import { getRowSum } from '../../../../../../utils/tableUtils';
 import CellField from '../CellField/CellField';
 
 interface RowFieldProps {
@@ -9,11 +10,8 @@ interface RowFieldProps {
   rowIndex: number;
 }
 
-const getRowSum = (row: Cell[]) =>
-  row.reduce((sum, cell) => sum + cell.amount, 0);
-
 function RowField({ row, rowIndex }: RowFieldProps) {
-  const { removeHighlight, removeRow } = useMatrix();
+  const { removeRow } = useMatrix();
   const [showPercentage, setShowPercentage] = useState(false);
 
   const sum = useMemo(() => getRowSum(row), [row]);
@@ -33,10 +31,7 @@ function RowField({ row, rowIndex }: RowFieldProps) {
       ))}
       <td
         onMouseEnter={() => setShowPercentage(true)}
-        onMouseLeave={() => {
-          setShowPercentage(false);
-          removeHighlight();
-        }}
+        onMouseLeave={() => setShowPercentage(false)}
       >
         {sum}
       </td>

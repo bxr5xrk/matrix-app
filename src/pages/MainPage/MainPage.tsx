@@ -3,7 +3,7 @@ import Form from './components/Form/Form';
 import Table from './components/Table/Table';
 import cl from './MainPage.module.scss';
 
-export default function MainPage() {
+function MainPage() {
   return (
     <MatrixProvider>
       <main className={cl.root}>
@@ -14,3 +14,5 @@ export default function MainPage() {
     </MatrixProvider>
   );
 }
+
+export default MainPage;
