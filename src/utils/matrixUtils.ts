@@ -13,7 +13,7 @@ export const generateMatrix = ({ m, n }: createMatrixProps) => {
 
     for (let j = 1; j <= n; j++) {
       row.push({
-        id: i * n + j,
+        id: Math.floor(Math.random() * 90000) + 1,
         amount: Math.floor(Math.random() * 900) + 100
       });
     }

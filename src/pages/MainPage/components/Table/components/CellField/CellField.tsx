@@ -29,7 +29,6 @@ function CellField({
     () => highlightedCellIds.has(id),
     [highlightedCellIds]
   );
-
   const percentage = useMemo(
     () => (showPercentage ? Math.floor((amount / sum) * 100) : 0),
     [showPercentage, amount, sum]
