@@ -28,14 +28,20 @@ export function MatrixProvider({ children }: MatrixProviderProps) {
   );
 
   const incrementCellAmount = useCallback((i: number, j: number) => {
-    setMatrix((prevMatrix) => {
-      const newMatrix = [...prevMatrix];
-      newMatrix[i][j] = {
-        ...newMatrix[i][j],
-        amount: newMatrix[i][j].amount + 1
-      };
-      return newMatrix;
-    });
+    setMatrix((prev) =>
+      prev.map((row, indexRow) =>
+        indexRow === i
+          ? row.map((cell, indexCell) =>
+              indexCell === j
+                ? {
+                    ...cell,
+                    amount: cell.amount + 1
+                  }
+                : cell
+            )
+          : row
+      )
+    );
   }, []);
 
   const addHighlight = useCallback(
@@ -51,11 +57,17 @@ export function MatrixProvider({ children }: MatrixProviderProps) {
           Math.abs(a - activeCellAmount) - Math.abs(b - activeCellAmount)
       );
 
-      const nearestAmounts = sortedAmounts.slice(1, x + 1); // exclude the hovered cell itself
+      const nearestAmounts = sortedAmounts.slice(1, x + 1);
 
-      const nearestCells = matrix.flatMap((row) =>
-        row.filter((cell) => nearestAmounts.includes(cell.amount))
-      );
+      const nearestCells = matrix
+        .flatMap((row) =>
+          row.filter(
+            (cell) =>
+              nearestAmounts.includes(cell.amount) &&
+              cell.id !== matrix[i][j].id
+          )
+        )
+        .slice(0, x);
 
       setHighlightedCellIds(new Set(nearestCells.map((cell) => cell.id)));
     },

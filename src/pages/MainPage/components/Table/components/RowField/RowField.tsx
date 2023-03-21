@@ -11,10 +11,10 @@ interface RowFieldProps {
 }
 
 function RowField({ row, rowIndex }: RowFieldProps) {
-  const { removeRow } = useMatrix();
+  const { removeRow, matrix } = useMatrix();
   const [showPercentage, setShowPercentage] = useState(false);
 
-  const sum = useMemo(() => getRowSum(row), [row]);
+  const sum = useMemo(() => getRowSum(row), [row, matrix]);
 
   return (
     <tr>
